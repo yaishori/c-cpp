@@ -73,6 +73,8 @@ int bin2int(char* str){
 	int len= strlen(str);
 	int ret =0;
 	int pow=1;
+	if(str==NULL)
+	return -1;
 	for(i=len-1; i>=0; i--){
 		ret= ret+(str[i]-48)*pow;
 		pow=pow*2;
@@ -84,6 +86,8 @@ int bin2int(char* str){
 char* squeeze(char* s1,char* s2){
 	char* p;
 	char* p2;
+	if(s1==NULL ||s2==NULL)
+		return NULL;
 	while(*s2 != '\0'){
 		char* p= s1;
 		char* p2= s1; /*save the loction we need to change*/
@@ -107,6 +111,8 @@ int locatin(char* str1,char* str2){
 	int count = 0;
 	int flag = 0;
 	int ret;
+	if(str1==NULL ||str2==NULL)
+	return -1;
 	while(*str1 != '\0'){
 		if(!memcmp(str1,str2,len)){     /*if return 0 so str1 and str2 are equal*/
 		flag=1;
