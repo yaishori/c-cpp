@@ -13,6 +13,7 @@ dast* createDast(int capacity){
 	da->index=0;
 	da->arr=malloc((capacity) * sizeof(int));
 	if(da->arr==NULL){
+		free(da);
 		printf("da->arr null pointer!\n");
 		return NULL;
 	}
