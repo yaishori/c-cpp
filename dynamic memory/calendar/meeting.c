@@ -8,6 +8,9 @@ Meeting_t* createMeeting(float begin,float end,int room){
 		return NULL;
 	}
 	meeting =malloc(sizeof(Meeting_t));
+	if(meeting==NULL){
+		return NULL;
+	}
 	meeting->begin=begin;
 	meeting->end=end;
 	meeting->room=room;

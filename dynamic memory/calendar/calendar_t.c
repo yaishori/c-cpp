@@ -9,13 +9,11 @@ Calendar_t* createDA(int capacity){
 	da->index=0;
 	da->capacity=capacity;
 	if(da==NULL){
-		printf("da null pointer!\n");
 		return NULL;
 	}
 	da->arr=malloc(capacity * sizeof(Meeting_t*));
 	if(da->arr==NULL){
 		free(da);
-		printf("da->arr null pointer!\n");
 		return NULL;
 	}
 	return da;
@@ -30,31 +28,18 @@ Calendar_t* createDA(int capacity){
 	if(meeting==NULL){
 		return 0;
 	}
-	printf("index =%d \n",da->index);
 	tmpIndex=da->index;
 	for(i=0;i<tmpIndex;i++){
 		if (meeting->begin <= p2[i]->begin){
-			if(p2[i]->begin<= meeting->end){
-				if(meeting->end<= p2[i]->end){
-					free(meeting);
-					return 0;
-				}
+			if(p2[i]->begin <= meeting->end){
+				free(meeting);
+				return 0;
 			}
 		}
 		if (p2[i]->begin <= meeting->begin){
-			if(meeting->begin<= p2[i]->end){
-				if(p2[i]->end<= meeting->end){
-					free(meeting);
-					return 0;
-				}
-			}
-		} 
-		if (p2[i]->begin <= meeting->begin){
-			if(meeting->begin<= meeting->end){
-				if(meeting->end <=  p2[i]->end){
-					free(meeting);
-					return 0;
-				}
+			if(meeting->begin <= p2[i]->end){
+				free(meeting);
+				return 0;	
 			}
 		}    
 	}
@@ -86,7 +71,6 @@ Calendar_t* createDA(int capacity){
 
 	if(!sorted){
 	da->arr[da->index]=meeting;
-	printf("hhhh\n");
 	}
 	da->index = (da->index)+1;
 
@@ -103,13 +87,13 @@ void printDA(Calendar_t* da){
 	printf("index: %d\n", da->index);
 	printf("Calendar:\n");
 	for(i=0;i<j;i++){
-		printf("meeting begin: %f meeting end: %f meeting room: %d \n",arr[i]->begin,arr[i]->end,arr[i]->room);
+		printf("%d) meeting begin: %f meeting end: %f meeting room: %d \n",i,arr[i]->begin,arr[i]->end,arr[i]->room);
 	}
 	return;
 
 }
 
-Calendar_t* removeMeeting(Calendar_t* da,Meeting_t* meeting){
+Calendar_t* removeMeeting(Calendar_t* da,float begin){
 	int tmpIndex=da->index;
 	int i;
 	Meeting_t **p2= da->arr;
@@ -117,11 +101,12 @@ Calendar_t* removeMeeting(Calendar_t* da,Meeting_t* meeting){
 		return da;
 	
 	for(i=0;i<tmpIndex;i++){
-		if(meeting->begin == p2[i]->begin){
+		if(begin == p2[i]->begin){
 			free(p2[i]);
 			for(i;i<(tmpIndex-1);i++){
 				p2[i]=p2[i+1];
 			}
+			free(p2[da->index]);
 			da->index = (da->index)-1;
 			break;
 
@@ -130,12 +115,12 @@ Calendar_t* removeMeeting(Calendar_t* da,Meeting_t* meeting){
 }
 
 
-Meeting_t* findMeeting(Calendar_t* da,Meeting_t* meeting){
+Meeting_t* findMeeting(Calendar_t* da,float begin){
 	int tmpIndex=da->index;
 	int i;
 	Meeting_t **p2= da->arr;
 	for(i=0;i<tmpIndex;i++){
-		if(meeting->begin == p2[i]->begin){
+		if(begin == p2[i]->begin){
 			return p2[i];
 		}
 	}
@@ -143,3 +128,13 @@ Meeting_t* findMeeting(Calendar_t* da,Meeting_t* meeting){
 }
 
 
+void destoryDA(Calendar_t* da){
+	Meeting_t** arr = da->arr;
+	int capacity=da->capacity;
+	int i;
+	for(i=0;i<capacity;i++){
+		free(arr[i]);
+	}
+	free(da->arr);
+	free(da);
+}
