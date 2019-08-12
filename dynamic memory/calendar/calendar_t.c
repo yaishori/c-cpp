@@ -130,4 +130,16 @@ Calendar_t* removeMeeting(Calendar_t* da,Meeting_t* meeting){
 }
 
 
+Meeting_t* findMeeting(Calendar_t* da,Meeting_t* meeting){
+	int tmpIndex=da->index;
+	int i;
+	Meeting_t **p2= da->arr;
+	for(i=0;i<tmpIndex;i++){
+		if(meeting->begin == p2[i]->begin){
+			return p2[i];
+		}
+	}
+	return NULL;
+}
+
 
