@@ -7,6 +7,7 @@ int main(){
 	Meeting_t* meet1;
 	Meeting_t* meet2;
 	Meeting_t* meet3;
+	Meeting_t* meet4;
 	int capacity;
 	Calendar_t* da;
 	meet1=createMeeting(3.0,4.0,4);
@@ -23,6 +24,7 @@ int main(){
 	insertMeeting(da, meet2);
 	insertMeeting(da, meet3);
 	removeMeeting(da,meet1);
+	meet4=findMeeting(da.meet2);
 	printDA(da);
 
 	return 0;
