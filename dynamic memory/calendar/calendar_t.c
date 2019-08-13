@@ -50,8 +50,9 @@ Calendar_t* createDA(int capacity){
 		da->arr=p2;
 		(da->capacity)=(da->capacity)*2;		
 		}
-		else
+		else{
 			return 0;
+		}
 
 	}
 	tmpIndex=da->index;
@@ -137,4 +138,40 @@ void destoryDA(Calendar_t* da){
 	}
 	free(da->arr);
 	free(da);
+	return;
+}
+
+
+void loadFromFile(char* name,Calendar_t* da){
+	Meeting_t* meet;
+	float begin;
+	float end;
+	int room;
+	FILE* fp;
+	fp=fopen(name,"r");
+	while(!feof(fp)){
+		fscanf(fp,"%f%f%d",&begin,&end,&room);
+		meet = createMeeting(begin,end,room);
+			if(meet==NULL){
+				printf("meeting not created:\n");
+				break;
+			}
+		insertMeeting(da,meet);
+
+	}
+	fclose(fp);
+	return;
+}
+
+void saveToFile(char* name,Calendar_t* da){
+	int i;
+	FILE* fp;
+	int j=da->index;
+	Meeting_t** arr = da->arr;
+	fp=fopen(name,"w");
+	for(i=0;i<j;i++){
+		fprintf(fp,"%f %f %d \n",arr[i]->begin,arr[i]->end,arr[i]->room);
+	}
+	fclose(fp);
+	return;
 }

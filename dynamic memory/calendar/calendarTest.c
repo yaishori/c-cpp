@@ -14,6 +14,7 @@ int main(){
 	int room;
 	int created=0;
 	int isInsert;
+	char* name="file";
 	while (cont) {
 		printf("Choose option: \n");
 		printf("1: create calendar  \n");
@@ -21,6 +22,7 @@ int main(){
 		printf("3: remove meeting  \n");
 		printf("4: find meeting \n");
 		printf("5: print calendar \n");
+		printf("6: load file \n");
 		printf("Any another number - stop \n");
 		scanf("%d", &option);
 		switch (option) {
@@ -85,10 +87,18 @@ int main(){
 				}
 				printDA(da);
 				break;
-
+			case 6:
+				if(!created){
+				printf("please create calendar first.\n");
+				break;
+				}
+				loadFromFile(name,da);
+				break;
 			default:
-				if(created)
+				if(created){
+				saveToFile(name,da);
 				destoryDA(da);
+				}
 				cont = 0;	break;
 		}
 	}
