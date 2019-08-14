@@ -20,23 +20,18 @@ void lastLines(int n,char* name){
 	fseek(fp,0,0);	
 		while(!feof(fp)){
       		pos=ftell(fp);
-			printf("%d\n",i%n);
 			arr[i%n]=pos;
 			fgets(str,512,fp);
 			pos=ftell(fp);
 				if(pos==end){
 					break;
 				}
-			printf("%ld\n",arr[i%n]);
 			i++;
 				
 			
 		}
 
-	printf("\n");
-	printf("pos:%ld\n",arr[i%n]);
 	pos=arr[(i+1)%n];
-	printf("pos:%ld\n",arr[(i+2)%n]);
 	fseek(fp,0,0);
 	fseek(fp,pos,1);
 		while(!feof(fp)){
