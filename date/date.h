@@ -12,15 +12,15 @@ typedef struct {
 }cDate_t;
 
 
-void setTime(cTime_t* time,int h,int m,int s);
+int setTime(cTime_t* time,int h,int m,int s);
 int getHour(cTime_t* time);
 int getMinutes(cTime_t* time);
 int getSeconds(cTime_t* time);
-void addTime(cTime_t* time, cTime_t* timeToAdd);
+int addTime(cTime_t* time, cTime_t* timeToAdd);
 void printTime(cTime_t* time, int format);
 
 
-void setDate(cDate_t* date,int y,int m,int d);
+int setDate(cDate_t* date,int y,int m,int d);
 int getDay(cDate_t* date);
 int getMonth(cDate_t* date);
 int getYear(cDate_t* date);

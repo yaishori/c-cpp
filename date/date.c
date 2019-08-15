@@ -3,24 +3,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-void setTime(cTime_t* time,int h,int m,int s){
+int setTime(cTime_t* time,int h,int m,int s){
 	if(time==NULL){
-		printf("null pointer-time\n");
+		return 0;
 	}
 	else if(h>24||h<0||m>59||m<0||s>59||s<0){
-		printf("not possible time\n");
+		return 0;
 	}
 	else{
 		time->h=h;
 		time->m=m;
 		time->s=s;
 	}
+
+	return 1;
 }
 
 int getHour(cTime_t* time){
 	int h;
 	if(time==NULL){
-		printf("null pointer-time\n");
 		h=-1;
 	}
 	else{
@@ -32,7 +33,6 @@ int getHour(cTime_t* time){
 int getMinutes(cTime_t* time){
 	int m;
 	if(time==NULL){
-		printf("null pointer-time\n");
 		m=-1;
 	}
 	else{
@@ -45,7 +45,6 @@ int getMinutes(cTime_t* time){
 int getSeconds(cTime_t* time){
 	int s;
 	if(time==NULL){
-		printf("null pointer-time\n");
 		s=-1;
 	}
 	else{
@@ -54,13 +53,12 @@ int getSeconds(cTime_t* time){
 
 	return s;
 }
-void addTime(cTime_t* time, cTime_t* timeToAdd){
+int addTime(cTime_t* time, cTime_t* timeToAdd){
 	int saveH;
 	int saveS;
 	int saveM;
 	if (time==NULL||timeToAdd==NULL){
-		printf("null pointer-time\n");
-		return;
+		return 0;
 	}
 	saveH =time->h;
 	saveM =time->m;
@@ -79,6 +77,8 @@ void addTime(cTime_t* time, cTime_t* timeToAdd){
 	}
 
 	time->h =((time->h + timeToAdd->h)%24);
+
+	return 1;
 	
 }
 
@@ -86,7 +86,6 @@ void addTime(cTime_t* time, cTime_t* timeToAdd){
 void printTime(cTime_t* time, int format){
 	char period[2]; 
 	if(time==NULL){
-		printf("null pointer-time\n");
 		return;
 	}
 	if(format>2||format<0){
@@ -114,26 +113,25 @@ void printTime(cTime_t* time, int format){
 	return;
 }
 
-void setDate(cDate_t* date,int y,int m,int d){
+int setDate(cDate_t* date,int y,int m,int d){
 	if(date==NULL){
-		printf("null pointer-date\n");
+		return 0;
 	}
 	else if((m<0)||(m>12) ||(d<0) || (d>31) || 
 			((y%4==0)&&(m==2)&&(d>29)) || ((y%4!=0)&&(m==2)&&(d>28))||
 			(d>30 && m==4)|| (d>30 && m==6)|| (d>30 && m==9)|| (d>30 && m==11)){
-
-				printf("not possible date\n");
+				return 0;
 	}	
 	else{
 		date->y=y;
 		date->m=m;
 		date->d=d;
 	}
+	return 1;
 }
 int getDay(cDate_t* date){
 	int d;
 	if(date==NULL){
-		printf("null pointer-date\n");
 		d=-1;
 	}
 	else{
@@ -146,7 +144,6 @@ int getDay(cDate_t* date){
 int getMonth(cDate_t* date){
 	int m;
 	if(date==NULL){
-		printf("null pointer-date\n");
 		m=-1;
 	}
 	else{
