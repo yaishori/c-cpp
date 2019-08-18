@@ -76,8 +76,7 @@ bitStruct* createBitStruct(int numOfFe){
 }
 
 int bitOn(int bitIndex,bitStruct* bitS){
-	int indexBit=(bitIndex)%32;
-	int index=bitIndex/32;
+	int index=(bitIndex)/32;
 	int i =1;
 	if(bitS==NULL){
 		return -1;
@@ -85,14 +84,13 @@ int bitOn(int bitIndex,bitStruct* bitS){
 	if(bitIndex>(bitS->numOfFe)){
 		return -1;
 	}
-	i= i<<indexBit;
+	i= i<<bitIndex;
 	bitS->fe[index]= (bitS->fe[index])|i;
 	return 1;
 }
 
 int bitOff(int bitIndex,bitStruct* bitS){
-	int indexBit=(bitIndex)%32;
-	int index=bitIndex/32;
+	int index=(bitIndex)/32;
 	int i =1;
 	if(bitS==NULL){
 		return -1;
@@ -100,7 +98,7 @@ int bitOff(int bitIndex,bitStruct* bitS){
 	if(bitIndex>bitS->numOfFe){
 		return -1;
 	}
-	i= i<<indexBit;
+	i= i<<bitIndex;
 	i=~i;
 	bitS->fe[index]= (bitS->fe[index])&i;
 	return 1;
@@ -109,15 +107,14 @@ int bitOff(int bitIndex,bitStruct* bitS){
 int bitStatus(int bitIndex,bitStruct* bitS){
 	int i =1;
 	int tmpFe;
-	int indexBit=(bitIndex)%32;
-	int index=bitIndex/32;
+	int index=(bitIndex)/32;
 	if(bitS==NULL){
 		return -1;
 	}
 	if(bitIndex>(bitS->numOfFe)){
 		return -1;
 	}
-	i= i<<indexBit;
+	i= i<<bitIndex;
 	tmpFe=(bitS->fe[index])&i;
 	if(tmpFe>0){
 		return 1;
