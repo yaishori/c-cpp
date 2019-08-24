@@ -14,7 +14,11 @@ void elementDes(void *_elem, void *context){
 }
 
 int elementCom(void *_elemA, void *_elemB){
-	return((int*)_elemA - (int*)_elemB);
+	int ret=(*(int*)_elemA - *(int*)_elemB);
+	/*printf("A= %d\n",*(int*)_elemA);
+	printf("B= %d\n",*(int*)_elemB);
+	printf("ret= %d\n",ret);*/
+	return ret;
 }
 
  int PointsSom(void *_elemA, void *_elemB){ 
@@ -40,7 +44,7 @@ int main(){
 	int itemNum;
 	int capacity;
 	int created=0;
-	int item;
+	int *item;
 	int myIndex;
 	void *context;
 	enum AdtStatus status;
@@ -71,9 +75,10 @@ int main(){
 					printf("please create calendar first.\n");
 					break;
 				}
+				item=malloc(sizeof(int));
 				printf("enter item:\n");
-				scanf("%d",&item);
-				status=darrayAdd(da,&item);
+				scanf("%d",item);
+				status=darrayAdd(da,item);
 				if(status==NullPointer){
 					printf("null pointer:\n");
 					return 0;
@@ -130,8 +135,9 @@ int main(){
 				printf("please create calendar first.\n");
 				break;
 				}
+				item=malloc(sizeof(int));
 				printf("enter item:\n");
-				scanf("%d",&item);
+				scanf("%d",item);
 				printf("enter index:\n");
 				scanf("%d",&myIndex);
 				status=darraySet(da, myIndex, &item);

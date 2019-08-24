@@ -126,13 +126,11 @@ int partition( darray *dArr, int left, int right,elementCompare compareFunc) {
     pivot = dArr->arr[right];
     
     while(1){
-    	printf("yyy\n");
+    	
         while(compareFunc(dArr->arr[right],pivot)>0){
-        	printf("ppp\n");
             right--;
         }
         while(compareFunc(dArr->arr[left],pivot)<0){
-        	printf("hhh\n");
             left++;
         }
         if( left < right ){
