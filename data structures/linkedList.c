@@ -11,6 +11,12 @@ struct node{
 struct node* middle(struct node* linkedList){
 	struct node* node1= linkedList;
 	struct node* node2= linkedList;
+	if(linkedList==NULL){
+ 		return NULL;
+ 	}
+ 	node1= linkedList;
+	node2= linkedList;
+
 	while (node2->next != NULL && node2->next->next!= NULL){
 		node1=node1->next;
 		node2=node2->next->next;
@@ -28,6 +34,11 @@ struct node* comminNode(struct node* node1,struct node* node2){
 	int i=0;
 	struct node* myNode1=node1;
 	struct node* myNode2=node2;
+	if(node1==NULL|| node2==NULL){
+ 		return NULL;
+ 	}
+	myNode1=node1;
+	myNode2=node2;
 	while (myNode2->next!= NULL){
 		count2++;
 		myNode2=myNode2->next;
@@ -66,6 +77,11 @@ struct node* comminNode(struct node* node1,struct node* node2){
 int ifLoop(struct node* linkedList){
 	struct node* node1= linkedList;
 	struct node* node2= linkedList;
+	if(linkedList==NULL){
+ 		return -1;
+ 	}
+ 	node1= linkedList;
+	node2= linkedList;
 	while(node2->next != NULL){
 		if(node2->next->next != NULL){
 			node1=node1->next;
@@ -90,11 +106,14 @@ void push(struct node** head, int newData)
   	(*head) = newNode;  
 }  
 
-void flipList(struct node** linkedList){
- 
-    struct node* node = *linkedList; 
-    struct node* prev = NULL;
+struct node* flipList(struct node** linkedList){
+ 	struct node* node;
+ 	struct node* prev = NULL;
     struct node* next = NULL; 
+ 	if(*linkedList==NULL){
+ 		return NULL;
+ 	}
+    node = *linkedList; 
   
         while (node != NULL) {  
             next = node->next;  
@@ -102,7 +121,8 @@ void flipList(struct node** linkedList){
             prev = node; 
             node = next; 
         } 
-        *linkedList = prev;   
+        *linkedList = prev;
+        return *linkedList;   
     return;
 }
 
