@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct linkedList linkedList;
-
-typedef unsigned long (* hash)( void *element);
-typedef int (* compare )(void *, void *);
-typedef int (* forEach)(void* val);
+#include "hashTable.h"
 
 
 struct linkedList{
@@ -15,7 +10,6 @@ struct linkedList{
 };
 
 
-
 struct HashTable{
 	unsigned long capacity;
 	hash hashFunc;
@@ -23,37 +17,19 @@ struct HashTable{
 	linkedList** list;
 };
 
-typedef struct HashTable HashTable;
 
 
- unsigned long myHash(void *str)
-    {
-    	unsigned char *myStr= (unsigned char*)str;
-        unsigned long hash = 5381;
-        int c;
-
-        while (c = *myStr++)
-            hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-        return hash;
-    }
-
-
-int elementCom(void *_elemA, void *_elemB){
-	int ret=(*(int*)_elemA - *(int*)_elemB);
-	return ret;
-}
-int ForEachPrint(void* value){
-	printf("%d ",*(int*)value);
-}
-
-int ForEachFunc(void* value){
-	*(int*)value=*(int*)value+1;
-}
 
 HashTable* createHashTable(unsigned long (* hash)( void *element),unsigned long capacity,int (* compare )(void *, void *)){
 	HashTable* hashT= malloc(sizeof(HashTable));
+	if(hashT==NULL){
+		return NULL;
+	}
 	hashT->list = calloc(capacity,sizeof(linkedList*));
+	if(hashT->list==NULL){
+		free(hashT);
+		return NULL;
+	}
 	hashT->hashFunc =hash;
 	hashT->capacity=capacity;
 	hashT->compare=compare;
@@ -61,81 +37,113 @@ HashTable* createHashTable(unsigned long (* hash)( void *element),unsigned long 
 	return hashT;
 }
 
-void push(linkedList** head, void* key,void* val)  
-{  
-    linkedList* newNode = (struct linkedList*) malloc(sizeof(struct linkedList));  
+static void push(linkedList** head, void* key,void* val)  
+{  	
+	linkedList** myhead;
+	linkedList* newNode; 
+	if(head==NULL){
+		return;
+	}
+	myhead=head;
+    newNode = (linkedList*) malloc(sizeof(struct linkedList)); 
+    if(newNode==NULL){
+		return;
+	}
     newNode->key = key;
     newNode->value = val;  
-  	newNode->next = (*head);  
-  	(*head) = newNode;  
+  	newNode->next = (*myhead);  
+  	(*myhead) = newNode;  
 }  
-int hashTableFind(HashTable* hashT, int offset, linkedList** current, linkedList** previous, void* key){
+int listFind(HashTable* hashT, int offset, linkedList** current, linkedList** previous, void* key){
 	*previous = NULL;
 	*current = hashT->list[offset];
 
 	while(*current != 0){
-		if(hashT->compare((*current)->key,key)){
-				return 1;
+		if(!(hashT->compare((*current)->key,key))){
+				return 0;
 			}
 		else{
 			*previous = *current;
 			*current = (*current)->next;
 		}
 	}
-	return 0;
+	return 1;
 } 
 
-int hashTableInsert(HashTable* hashT,void* key,void* val){
+AdtStatus hashTableInsert(HashTable* hashT,void* key,void* val,int update){
 	linkedList* current;
 	linkedList* previous;
-	unsigned long offset= hashT->hashFunc(key)%(hashT->capacity);
-	if(hashTableFind(hashT,offset,&current,&previous,key)){
+	unsigned long offset;
+	if(hashT==NULL || hashT->list==NULL){
+		return NullPointer;
+	}
+	offset = hashT->hashFunc(key)%(hashT->capacity);
+	if(!(listFind(hashT,offset,&current,&previous,key))){
+		if(update){
 		current->value=val;
+		}
+		else{return Exist;}
 	}
 	else{
-	push(&hashT->list[offset],key,val);
+	push(&(hashT->list[offset]),key,val);
 	}
-	printf("%d\n",*(int*)hashT->list[offset]->key);
-	printf("%d\n",*(int*)hashT->list[offset]->value);
-	return 1;
+	return OK;
 }
 
-int hashTableDelete(HashTable* hashT,void* key){
+AdtStatus hashTableDelete(HashTable* hashT,void* key){
 	linkedList* current;
 	linkedList* previous;
-	unsigned long offset= hashT->hashFunc(key)%(hashT->capacity);
-	if(hashTableFind(hashT,offset,&current,&previous,key)){
-		if(current->next == 0){
-			free(current);
-		}
-		else{
-		previous->next=current->next;
-		free(current);
-		}
+	unsigned long offset;
+	if(hashT==NULL || hashT->list==NULL){
+		return NullPointer;
 	}
-	return 1;
+	offset= hashT->hashFunc(key)%(hashT->capacity);
+	if(!(listFind(hashT,offset,&current,&previous,key))){
+		if(hashT->list[offset]->next == NULL){
+			hashT->list[offset]=NULL;
+			free(current);
+			return OK;
+		}
+		else if(previous==NULL && current->next!=NULL){
+			hashT->list[offset]=current->next;
+			free(current);
+			return OK;
+		}
+		else if(previous!=NULL){
+			previous->next=current->next;
+			free(current);
+			return OK;
+		}
+
+	}
+	return NotFound;
 }
 
-int hashTableDestroy(HashTable* hashT){
-	linkedList** temp=hashT->list;
-	linkedList* list;
+AdtStatus hashTableDestroy(HashTable* hashT){
 	linkedList* current;
 	int i;
+	if(hashT==NULL || hashT->list==NULL){
+		return NullPointer;
+	}
 	for(i=0;i<hashT->capacity;i++){
-		list=temp[i];
-		while(list!=0){
-			current=list;
-			list=list->next;
+
+		while(hashT->list[i]!=NULL){
+			current=hashT->list[i];
+			hashT->list[i]=hashT->list[i]->next;
 			free(current);
 		}
-		free(temp[i]);
+		free(hashT->list[i]);
 	}
 	free(hashT);
+	return OK;
 }
 
-int hashTableForEach(HashTable* hashT,forEach func){
+AdtStatus hashTableForEach(HashTable* hashT,forEach func){
 	linkedList* list;
 	int i;
+	if(hashT==NULL || hashT->list==NULL){
+		return NullPointer;
+	}
 	for(i=0;i<hashT->capacity;i++){
 		list=hashT->list[i];
 		while(list!=0){
@@ -143,37 +151,19 @@ int hashTableForEach(HashTable* hashT,forEach func){
 			list=list->next;
 		}
 	}
+	return OK;
 }
 
-
-
-int main(){
-	int i;
-	int j;
-	HashTable* hashT = createHashTable(myHash,5,elementCom);
-	int mynum=2;
-	int mynum2=1;
-	int mykey=3;
-	int mykey2=5;
-	int* num=malloc(sizeof(int));
-	int* num2=malloc(sizeof(int));
-	int* key=malloc(sizeof(int));
-	int* key2=malloc(sizeof(int));
-	num=&mynum;
-	num2=&mynum2;
-	key=&mykey;
-	key2=&mykey2;
-	hashTableInsert(hashT,(void*)key,(void*)num);
-	hashTableInsert(hashT,(void*)key2,(void*)num2);
-	hashTableForEach(hashT,ForEachPrint);
-	printf("\n");
-	hashTableForEach(hashT,ForEachFunc);
-	printf("after adding one:\n");
-	hashTableForEach(hashT,ForEachPrint);
-	printf("\n");
-	hashTableDelete(hashT,(void*)key);
-	hashTableForEach(hashT,ForEachPrint);
-	printf("\n");
-	hashTableDestroy(hashT);
-	return 0;
+AdtStatus hashTableFind(HashTable* hashT,void* key,void** val){
+	linkedList* current;
+	linkedList* previous;
+	unsigned long offset= hashT->hashFunc(key)%(hashT->capacity);
+	if(!(listFind(hashT,offset,&current,&previous,key))){
+		*val=current->value;
+		return OK;
+	}
+	else{
+		return NotFound;
+	}
 }
+

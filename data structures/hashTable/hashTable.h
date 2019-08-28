@@ -1,26 +1,19 @@
-struct linkedList{
-	void* key;
-	void* value;
-	linkedList* list;
-};
+#ifndef H_HASH
+#define H_HASH
 
+typedef struct HashTable HashTable;
 typedef struct linkedList linkedList;
+typedef enum {OK, AllocationError, NullPointer, WrongIndex, NotFound,Exist} AdtStatus; 
+typedef unsigned long (* hash)( void *element);
+typedef int (* compare )(void *, void *);
+typedef int (* forEach)(void* val);
 
-struct HashTabale{
-	unsigned long capacity;
-	unsigned long (* hash)( void *element);
-	linkedList** list;
-	int (* compare )(void *, void *);
-};
+HashTable* createHashTable(unsigned long (* hash)( void *element),unsigned long capacity,int (* compare )(void *, void *));
+int listFind(HashTable* hashT, int offset, linkedList** current, linkedList** previous, void* key);
+AdtStatus hashTableInsert(HashTable* hashT,void* key,void* val,int update);
+AdtStatus hashTableDelete(HashTable* hashT,void* key);
+AdtStatus hashTableDestroy(HashTable* hashT);
+AdtStatus hashTableForEach(HashTable* hashT,forEach func);
+AdtStatus hashTableFind(HashTable* hashT,void* key,void** val);
 
-typedef struct HashTabale HashTabale;
-
-HashTabale* createHashTable(unsigned long (* hash)( void *element),unsigned long capacity,int (* compare )(void *, void *)){
-	HashTabale* hashT= malloc(sizeof(HashTabale));
-	hashT->list = malloc(capacity*sizeof(linkedList));
-	hashT->hash =hash;
-	hashT->capacity;
-	hashT->compare=comapre;
-
-	return hashT;
-	}
+#endif
