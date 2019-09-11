@@ -5,7 +5,8 @@
 #include <sys/syscall.h>
 #include <pthread.h> 
 #include <semaphore.h> 
-#include <unistd.h> 
+#include <unistd.h>
+#include <pthread.h> 
 #include "queue.h"
 #include "producer.h"
 #include "consumer.h"
@@ -26,14 +27,14 @@ producers* createProducers(Queue* QPC, Queue* QCP,int size){
    myprods->queues= malloc((sizeof(Queue*))*2);
    myprods->queues[0]= QPC;
    myprods->queues[1]= QCP;
-   myprods->producer_t=malloc((sizeof(pthread_t))*size);
+   myprods->producer_t = malloc((sizeof(pthread_t*))*size);
    sem_init(&(myprods->sem_p), 0, size);
 
    for (i= 0; i < size; i++){
-     /* sem_wait(&sem_p);*/
+      myprods->producer_t[i]=malloc(sizeof(pthread_t));
       pthread_create((myprods->producer_t[i]), NULL, producer,(void**)(myprods->queues));
    }
-
+   return myprods;
 }
 
 void joinProducers(producers* myprods){
@@ -52,14 +53,12 @@ void *producer(void* args)
    char** retst=malloc(sizeof(char*));
    /*sem_post(&sem_p);*/
    for(i=0;i<2;i++){
-   	  x= (int)syscall(__NR_gettid);
+   	x= (int)syscall(__NR_gettid);
 	  sprintf(st,"my pid is%d\n", x);
       printf("my message: %s\n",  st);
       enqueue((Queue*)((void**)args)[0],st);
       dequeue((Queue*)((void**)args)[1] , retst);
-      if(!strcmp(*retst,"stop")){
-         break;
-      }
+      
       sprintf(st,"my pid is%d\n", x);
       printf("i got message: %s\n",  *retst);
   }
@@ -79,7 +78,7 @@ void main()
    joinConsumers(cons);
    
 
-   exit(0);
+   return;
 }
 
 

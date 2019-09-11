@@ -24,13 +24,14 @@ consumers* createConsumers(Queue* QPC, Queue* QCP,int size){
    mycons->queues= malloc((sizeof(Queue*))*2);
    mycons->queues[0]= QPC;
    mycons->queues[1]= QCP;
-   mycons->consumer_t=malloc((sizeof(pthread_t))*size);
+   mycons->consumer_t=malloc((sizeof(pthread_t*))*size);
    sem_init(&(mycons->sem_c), 0, size);
 
    for (i= 0; i < size; i++){
-     /* sem_wait(&sem_c);*/
+      mycons->consumer_t[i]=malloc(sizeof(pthread_t));
       pthread_create((mycons->consumer_t[i]), NULL, consumer,(void**)(mycons->queues));
    }
+   return mycons;
 
 }
 
@@ -51,13 +52,16 @@ void *consumer(void* args)
    while(1){
    	  x= (int)syscall(__NR_gettid);
       dequeue((Queue*)((void**)args)[0] , st);
+      enqueue((Queue*)((void**)args)[1],*st);
       if(!strcmp(*st,"stop")){
+         printf("hghghg\n");
          enqueue((Queue*)((void**)args)[0],*st);
-      	enqueue((Queue*)((void**)args)[1],*st);
          break;
       }
       printf("my consumer index:%d\n",x);
       printf("my message:%s\n",*st);
     }
+
+    return;
    
 }
