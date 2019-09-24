@@ -7,6 +7,7 @@ using namespace std;
 int main(){
 	int mylen;
 	int mycmp;
+	bool mybool;
 	string_t mystr;
 	mystr.print();
 	mylen=mystr.getLen();
@@ -29,6 +30,21 @@ int main(){
 	cout << "compare between mystr to mystr1" << endl;
 	cout << mycmp << endl;
 	mystr.print();
+
+	mystr.upperCase();
+	mystr.print();
+
+	mystr.prePend(mystr1);
+	mystr.print();
+
+	mybool = mystr<mystr3;
+	cout << mybool << endl;
+
+	mybool = mystr3<mystr;
+	cout << mybool << endl;
+
+	cout<<mystr;
+
 
 	return 0;
 
