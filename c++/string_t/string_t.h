@@ -23,14 +23,14 @@ public:
 	void lowerCase();
 	void upperCase();
 	string_t& operator+=(string_t& str);
-	bool operator<(string_t& str);
-	bool operator>(string_t& str);
-	bool operator<=(string_t& str);
-	bool operator>=(string_t& str);
-	bool operator==(string_t& str);
-	bool operator!=(string_t& str);
+	bool operator<(string_t& str)const;
+	bool operator>(string_t& str)const;
+	bool operator<=(string_t& str)const;
+	bool operator>=(string_t& str)const;
+	bool operator==(string_t& str)const;
+	bool operator!=(string_t& str)const;
 	void prePend(string_t& str);
-	int contains(string_t& str);
+	int contains(string_t& str)const;
 	char& operator[](int index);
 private:
 	char* s;

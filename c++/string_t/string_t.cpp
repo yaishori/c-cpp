@@ -1,10 +1,4 @@
-#include <string.h>
 #include "string_t.h"
-#include <stdio.h>
-#include <ctype.h>
-#include <iostream>
-using namespace std;
-
 
 string_t::string_t(){
 		s=new char[1];
@@ -106,32 +100,32 @@ string_t& string_t:: operator+=(string_t& str){
 		return *this;
 }
 
-bool string_t:: operator<(string_t& str){
+bool string_t:: operator<(string_t& str)const{
 	return(string_tCmp(str)==1);
 	
 }
 
-bool string_t:: operator>(string_t& str){
+bool string_t:: operator>(string_t& str)const{
 	return(string_tCmp(str)==2);
 }
 
-bool string_t:: operator==(string_t& str){
+bool string_t:: operator==(string_t& str)const{
 	return(string_tCmp(str)==0);
 }
 
-bool string_t:: operator<=(string_t& str){
+bool string_t:: operator<=(string_t& str)const{
 	return(string_tCmp(str)!=2);
 }
 
-bool string_t:: operator>=(string_t& str){
+bool string_t:: operator>=(string_t& str)const{
 	return(string_tCmp(str)!=1);
 }
 
-bool string_t:: operator!=(string_t& str){
+bool string_t:: operator!=(string_t& str)const{
 	return(string_tCmp(str)!=0);
 }
 
-int string_t::contains(string_t& str) {
+int string_t::contains(string_t& str)const {
 	  	return (locatin(s,str.s)!=-1);
 
 }
