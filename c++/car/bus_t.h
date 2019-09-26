@@ -6,10 +6,11 @@ public:
 	~bus_t();
 	bus_t();
 	bus_t(const int cap);
-	bus_t(const car_t &car);
 
 private:
 	unsigned int numSeats;
 	unsigned int numLines;
+	
+	bus_t(const car_t &car);
 
 };

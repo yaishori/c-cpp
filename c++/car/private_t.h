@@ -10,10 +10,10 @@ public:
 	int getSpeed();
 	private_t();
 	private_t(unsigned int cap);
-	private_t(const private_t& priv);
 	~private_t();
 
 
 private:
 	int speed;
+	private_t(const private_t& priv);
 };

@@ -12,11 +12,6 @@ private_t::private_t(unsigned int cap):car_t(cap){
 	car_t::setGear("automatic");	
 }
 
-private_t::private_t(const private_t& priv): car_t(priv){
-	speed = 0;
-	car_t::setName("private");
-	car_t::setGear("automatic");	
-}
 
 private_t::~private_t(){
 	

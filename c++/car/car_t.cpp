@@ -15,16 +15,6 @@ car_t::car_t(const int cap)id(globalID++){
 	gear="";
 }
 
-car_t::car_t(const car_t &car){
-	capacity=car.capacity;
-}
-
-car_t& car_t:: operator=(const car_t& car){
-		if(this!=&car){
-			capacity=car.capacity;
-		}
-		return *this;
-}
 
 bool car_t:: operator<(car_t& car)const{
 	return(capacity<car.capacity);

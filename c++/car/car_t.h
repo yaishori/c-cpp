@@ -10,8 +10,7 @@ class car_t{
 public:
 	car_t();
 	car_t(const int cap);
-	car_t(const car_t &car);
-	car_t& operator=(const car_t& car);
+	
 	bool operator<(car_t& car)const;
 	bool typecmp(car_t& car)const;
 
@@ -45,5 +44,8 @@ private:
 	unsigned int capacity;
 	string gear;
 	string name; 
+
+	car_t(const car_t &car);
+	car_t& operator=(const car_t& car);
 
 };
