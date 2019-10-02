@@ -1,5 +1,8 @@
 #include "memManager_t.h"
 
+#ifndef H_PAGE
+#define H_PAGE
+
 class memPage_t: virtual public memManager_t{
 public:
 	virtual ~memPage_t();
@@ -11,7 +14,6 @@ public:
 	const char* getString() const{
 			return m_page;
 	}
-	virtual void print();
 	virtual unsigned int readhelper(void* buff,unsigned int bytes, unsigned int position);
 	virtual unsigned int readData(void* buff,unsigned int nbytes);
 	virtual unsigned int readData(void* buff,unsigned int nbytes, unsigned int position);
@@ -27,3 +29,5 @@ private:
 	static unsigned int defaultSize;
 	char* m_page;
 };
+
+#endif

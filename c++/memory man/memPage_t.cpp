@@ -18,14 +18,11 @@ unsigned int memPage_t::defaultSize=6;
 
 	}
 
-	void memPage_t::print(){
-		cout<<*getString()<<endl;
-	}
 
 	unsigned int memPage_t::readhelper(void* buff,unsigned int bytes,unsigned int position){
 			memcpy(buff,m_page+position,bytes);
 			*((char*)buff+bytes)=0;
-			memManager_t::setPosition(position+bytes);
+			setPosition(position+bytes);	
 			return bytes;
 	}
 
@@ -39,7 +36,7 @@ unsigned int memPage_t::defaultSize=6;
 			buff=0;
 			return 0;
 		}
-		bytes=getActualSize()-1-position;
+		bytes=getActualSize()-position;
 		if(nbytes>bytes){
 			 return readhelper(buff,bytes,position);
 		}
@@ -50,9 +47,11 @@ unsigned int memPage_t::defaultSize=6;
 
 	unsigned int memPage_t::writeHelper(void* buff,unsigned int bytes, unsigned int position){
 		memcpy(m_page+position,buff,bytes);
-		memManager_t::setPosition(position+bytes);
+		
+
+		setPosition(position+bytes);
 		if(getPosition()>getActualSize()){
-			memManager_t::setActualSize(getPosition());
+			setActualSize(getPosition());
 			m_page[getActualSize()]='\0';
 		}
 		return bytes;

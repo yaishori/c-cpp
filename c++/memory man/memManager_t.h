@@ -5,6 +5,9 @@
 #include <iostream>
 using namespace std;
 
+#ifndef H_MAN
+#define H_MAN
+
 class memManager_t{
 
 public:
@@ -24,7 +27,14 @@ public:
 
 
 	virtual void setPosition(unsigned int pos){
-		m_position=pos;
+		m_position = pos;
+		/*if (pos > m_actualSize){
+			throw pos;
+		}
+		else {
+			m_position = pos;
+			return;
+		}*/
 	}
 	virtual void setActualSize(unsigned int actual){
 		m_actualSize=actual;
@@ -42,3 +52,5 @@ private:
 	unsigned int m_actualSize;  
 
 };
+
+#endif
