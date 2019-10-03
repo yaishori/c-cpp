@@ -13,10 +13,10 @@ class memManager_t{
 public:
 	memManager_t();
 	memManager_t(const unsigned int pos, const unsigned int actual);
-	virtual unsigned int readData(void* buff,unsigned int nbytes){return 0;}
-	virtual unsigned int readData(void* buff,unsigned int nbytes, unsigned int position){return 0;}
-	virtual unsigned int writeData(const void* buff,unsigned int nbytes){return 0;}
-	virtual unsigned int writeData(const void* buff,unsigned int nbytes, unsigned int position){return 0;}
+	virtual unsigned int readData(void* buff,unsigned int nbytes)=0;
+	virtual unsigned int readData(void* buff,unsigned int nbytes, unsigned int position)=0;
+	virtual unsigned int writeData(void* buff,unsigned int nbytes)=0;
+	virtual unsigned int writeData(void* buff,unsigned int nbytes, unsigned int position)=0;
 	virtual unsigned int getPosition()const{
 		return m_position;
 	}
