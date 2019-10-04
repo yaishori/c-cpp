@@ -12,7 +12,7 @@ public:
 	building_t& operator=(const building_t& building);
 
 	const BID& getBuildingID() const;
-	void setBuildingID(const BID id);
+	void setBuildingID(const BID& id);
 
 private: 
     BID m_id;  
@@ -35,7 +35,7 @@ template <class BID> const BID& building_t<BID>::getBuildingID() const{
 }
 
 template <class BID> 
-void building_t<BID>::setBuildingID(const BID id){
+void building_t<BID>::setBuildingID(const BID& id){
 		m_id=id;
 }
 
