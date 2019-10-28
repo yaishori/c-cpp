@@ -1,3 +1,6 @@
+#ifndef ANALYZE_H
+#define ANALYZE_H
+
 #include <string>
 #include <set>
 #include <queue>
@@ -8,8 +11,6 @@
 
 using namespace std;
 
-#ifndef ANALYZE_H
-#define ANALYZE_H
 
 class analyzer_t{
 	public:
