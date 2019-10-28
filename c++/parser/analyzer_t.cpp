@@ -1,14 +1,15 @@
 #include "analyzer_t.h"
 
-set<string> analyzer_t::m_predefinedTypes=
-	{"char", "short", "int", "long", "float", "double", "void"};
-set<string> analyzer_t::m_keyWords=
-	{"if", "else", "for" , "while", "class", 
-		"private", "public", "protected", "main", "const", "virtual"};
-set<string> analyzer_t::m_operators=
-	{"++", "--", "==", "->" , "=", "+", "-", "*", "&", "<<", ">>"};
-set<string> analyzer_t::m_predefinedTokens=
-	{"(", ")", "[", "]" , "{" , "}", ";", "<", ">" , "=", "+", "-", "*", "&"};
+string pred[]={"char", "short", "int", "long", "float", "double", "void"};
+set<string> analyzer_t::m_predefinedTypes(pred,pred+7);
+string key[]= {"if", "else", "for" , "while", "class", 
+		"private", "public", "protected", "main", "const", "virtual"};	
+set<string> analyzer_t::m_keyWords(key,key+11);
+string op[]={"++", "--", "==", "->" , "=", "+", "-", "*", "&", "<<", ">>"};
+set<string> analyzer_t::m_operators(op,op+11);
+string tok[]={"(", ")", "[", "]" , "{" , "}", ";", "<", ">" , "=", "+", "-", "*", "&"};	
+set<string> analyzer_t::m_predefinedTokens(tok,tok+14);
+	
 
 
 void analyzer_t::endRun(){
@@ -140,6 +141,7 @@ bool analyzer_t::checkPreDefinedTypes(const string& token){
 		}
 		return true;
 	}
+	return false;
 }
 
 void analyzer_t::checkAfterPredfined(const string& token){
