@@ -134,7 +134,6 @@ bool analyzer_t::checkPreDefinedTypes(const string& token){
 		if(m_predefined)
 		{
 			cout<<"line "<<m_numLine<<": error, multiple type"<<endl;
-			cout<<"line "<<m_numLine<<": error,'"<<token<<"' is not declared"<<endl;
 			m_predefined = false;
 		}else{
 			m_predefined = true;
