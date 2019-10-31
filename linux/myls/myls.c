@@ -14,6 +14,7 @@ int main() {
    DIR *dir;
    char cwd[PATH_MAX];
    struct stat fileStat;
+   int blocks=0;
     
    if (getcwd(cwd, sizeof(cwd)) != NULL) {
        printf("Current working dir: %s\n", cwd);
@@ -28,7 +29,17 @@ int main() {
         if(stat(dp->d_name,&fileStat) < 0){  
           return 1;
         }
-        printf( (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+        blocks= blocks+fileStat.st_blocks;
+        if((S_ISDIR(fileStat.st_mode))){
+        	printf("d");
+        }
+        else if((S_ISLNK(fileStat.st_mode))){
+        	printf("l");
+        }
+        else{
+        	printf("-");
+        }
+
         printf( (fileStat.st_mode & S_IRUSR) ? "r" : "-");
         printf( (fileStat.st_mode & S_IWUSR) ? "w" : "-");
         printf( (fileStat.st_mode & S_IXUSR) ? "x" : "-");
@@ -54,6 +65,8 @@ int main() {
         printf("%s\n",dp->d_name);
         }
     }
+
+    printf("total %d\n",blocks/2);
 
     closedir(dir);
    return 0;
