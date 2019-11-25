@@ -9,6 +9,7 @@
 #include <linux/slab.h> /* for kmalloc, kfree */
 #include "mq.h"
 #include <linux/uaccess.h> /*for copy to user*/
+#include <linux/mutex.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Ori Yaish");
@@ -33,7 +34,7 @@ struct my_message_queue_t {
 	int size; /* number of messages in queue */
 	size_t max_mes;
 	struct device *message_queue_device;
-	/*struct mutex *mutex;*/
+	struct mutex mutex;
 };
 
 static struct my_message_queue_t *queues;
@@ -51,7 +52,7 @@ static int first_minor;
 static inline void message_queue_ctor(struct my_message_queue_t *msq)
 {
 	INIT_LIST_HEAD(&msq->q_messages);
-	/* Mmutex_init(msq->mutex); */
+	mutex_init(&msq->mutex); 
 	msq->size = 0;
 	msq->max_mes = 100;
 	msq->message_queue_device = NULL;
@@ -75,23 +76,24 @@ static long mq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		int ret;
          switch(cmd) {
                 case WR_VALUE:
+                		mutex_lock(&queue->mutex);
                 		if((queue->size) ==100){
                 			pr_info(KBUILD_MODNAME " overFlow\n");
-                			break;
+                			mutex_unlock(&queue->mutex);
+                			return -ENOTTY;
                 		}
-                		/*mutex_lock(queue->mutex);*/
                 		
                         ret=copy_from_user(&my_buff ,(struct ms_buff*)arg, sizeof(struct ms_buff));
                         pr_info(KBUILD_MODNAME "a\n");
                         if(ret) {
                         	pr_err("%s: cannot copy from user\n", THIS_MODULE->name);
-                        	/*mutex_unlock(queue->mutex);*/
+                        	mutex_unlock(&queue->mutex);
                         	return ret;
                         }
                         ms_b=(struct mystruct*)kmalloc(sizeof(struct mystruct), GFP_KERNEL);
                         if(IS_ERR(ms_b)) {
                         	pr_err("%s: cannot allocate memoryh\n", THIS_MODULE->name);
-                        	/*mutex_unlock(queue->mutex);*/
+                        	mutex_unlock(&queue->mutex);
                         	return PTR_ERR(ms_b);
                         }
                         pr_info(KBUILD_MODNAME "b\n");
@@ -100,13 +102,13 @@ static long mq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
                         pr_info(KBUILD_MODNAME "c\n");
                         if(IS_ERR(new_buff)) {
                         	pr_err("%s: cannot allocate memory 2\n", THIS_MODULE->name);
-                        	/*mutex_unlock(queue->mutex);*/
+                        	mutex_unlock(&queue->mutex);
                         	return PTR_ERR(new_buff);
                         }
                         ret=copy_from_user(new_buff, my_buff.mes, ms_b->size);
                         if(ret) {
                         	pr_err("%s: cannot copy buffer from user space\n", THIS_MODULE->name);
-                        	/*mutex_unlock(queue->mutex);*/
+                        	mutex_unlock(&queue->mutex);
                         	return ret;
                         }
                         pr_info(KBUILD_MODNAME "d\n");
@@ -119,18 +121,14 @@ static long mq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
                         pr_info(KBUILD_MODNAME "%d\n",queue->size);
                         
                         
-                        /*list_for_each(p, &queue->q_messages) 
-				        {
-				                new_ms = list_entry(p, struct mystruct, mylist);
-				                printk(KERN_INFO"%d\n", new_ms->msg.size);
-				                printk(KERN_INFO"%s\n", new_ms->msg->mes);
-
-				        }*/
-                        /*mutex_unlock(queue->mutex);*/
+                 
+                        mutex_unlock(&queue->mutex);
                         break;
                 case RD_VALUE:
+                		mutex_lock(&queue->mutex);
                 		if(queue->size == 0){
                 			pr_info("%s: empty queue\n", THIS_MODULE->name);
+                			mutex_unlock(&queue->mutex);
                 			return -ENOTTY;
                 		}
                 		pr_info(KBUILD_MODNAME "begin reading\n");
@@ -146,11 +144,11 @@ static long mq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
                 		ret=copy_to_user((char*)arg,new_ms->buf, new_ms->size);
                         if(ret) {
                         	pr_err("%s: cannot copy buffer from user space\n", THIS_MODULE->name);
-                        	//mutex_unlock(queue->mutex);
+                        	mutex_unlock(&queue->mutex);
                         	return ret;
                         }
                         pr_info(KBUILD_MODNAME "after copy\n");
-                        /*mutex_unlock(&queue->mutex);*/
+                        mutex_unlock(&queue->mutex);
                         return new_ms->size;
                         break;
         }
