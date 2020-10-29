@@ -22,10 +22,10 @@ struct AverageBuffer{
 	int sumForever;
 	int sumUpper;
 	int sumLower;
-	node* old;
-	node* new;
-	node* upperQuerter;//pointer to the node that end the upper quarter
-	node* lowerQuerter;	//pointer to the node that start the lower quarter
+	struct node* old;
+    struct node* new;
+    struct node* upperQuerter;//pointer to the node that end the upper quarter
+    struct node* lowerQuerter;	//pointer to the node that start the lower quarter
 };
 
 void* allocAverageBuffer(int size){
@@ -34,7 +34,7 @@ void* allocAverageBuffer(int size){
 	if(size <= 0)
 		return NULL;
 	
-	ab = malloc(sizeof(AverageBuffer));
+	ab = (AverageBuffer*)malloc(sizeof(AverageBuffer));
 	if(ab == NULL)
 		return NULL;
 	
@@ -54,11 +54,12 @@ void* allocAverageBuffer(int size){
 }
 
 void clearAverageBuffer(AverageBuffer* ab){
-	node* node = ab->new;
-	while (node != NULL){
-		free(ab->new);
-		node = node->next;
-		ab->new = node;
+    struct node* currentNode = ab->new;
+	struct node* nextNode;
+	while (currentNode != NULL){
+        nextNode = currentNode->next;
+		free(currentNode);
+        currentNode =nextNode;
 	}
 
 	ab->quarter = 0;
@@ -84,7 +85,7 @@ void freeAverageBuffer(AverageBuffer* ab){
 
 void addSample(AverageBuffer* ab, int randNum){
 	
-	node* node = malloc(sizeof(node));
+	struct node* node = (struct node*)malloc(sizeof(struct node));
 	node->value = randNum;
 	node->prev = NULL;
 	
@@ -96,6 +97,7 @@ void addSample(AverageBuffer* ab, int randNum){
 	if (ab->new == NULL){
 		ab->old = node;
 		ab->new = ab->old;
+		ab->new->next = NULL;
 	}
 	
 	else{

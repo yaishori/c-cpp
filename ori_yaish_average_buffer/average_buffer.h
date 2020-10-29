@@ -1,7 +1,6 @@
 #ifndef H_AB
 #define H_AB
 
-typedef struct node node;
 typedef struct AverageBuffer AverageBuffer;
 
 void* allocAverageBuffer(int size);
